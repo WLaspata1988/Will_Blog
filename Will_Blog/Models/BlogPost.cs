@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Will_Blog.Models
 {
@@ -12,7 +13,8 @@ namespace Will_Blog.Models
         public string Title { get; set; }
         public string Abstract { get; set; }//Physically type in value of this "abstract"
         public string Slug { get; set; }//Value set using helper method
-        public string Body { get; set; }//Indicating body of the BlogPost Body is a type
+        [AllowHtml]
+        public string Body { get; set; }
         public string MediaUrl { get; set; }//Record a string that is pointing to a path in project, or server containing media(gif, mp4, image)
         public bool Published { get; set; }//Everyone can see it true/false
         public DateTimeOffset Created { get; set; }
@@ -25,8 +27,8 @@ namespace Will_Blog.Models
             Comments = new HashSet<Comment>();//Constructor = method that runs automatically, same name as the class or "BlogPost" "this." optional
         }
 
-
-
+        
+        
     }
 
 }

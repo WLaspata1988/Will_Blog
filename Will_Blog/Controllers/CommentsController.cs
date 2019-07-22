@@ -15,6 +15,7 @@ namespace Will_Blog.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Comments
+        [Authorize(Roles ="Moderator, Admin")]
         public ActionResult Index()
         {
             var comments = db.Comments.Include(c => c.Author).Include(c => c.BlogPost);

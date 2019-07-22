@@ -323,6 +323,10 @@ namespace Will_Blog.Controllers
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            //if (loginInfo != null)
+                
+
+
             if (loginInfo == null)
             {
                 return RedirectToAction("Login");

@@ -38,7 +38,7 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (var item in Model) {//Model refers to IEnumerable, or the enumerator list order matters
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Title)
@@ -50,7 +50,8 @@
             @Html.DisplayFor(modelItem => item.Slug)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Body)
+            @*@Html.DisplayFor(modelItem => item.Body)*@
+            @Html.Raw(item.Body)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.MediaUrl)
@@ -65,9 +66,9 @@
             @Html.DisplayFor(modelItem => item.Updated)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Details", "Details", new { slug = item.Slug }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
         </td>
     </tr>
 }
