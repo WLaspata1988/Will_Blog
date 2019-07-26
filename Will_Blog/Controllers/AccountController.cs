@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -13,6 +15,7 @@ using Will_Blog.Models;
 namespace Will_Blog.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -156,12 +159,25 @@ namespace Will_Blog.Controllers
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    //How do I recreate the sending of the email?
+                    //Step 1: I need a MailMessage
+                    var emailFrom = WebConfigurationManager.AppSettings["emailfrom"];
+                    var email = new MailMessage(emailFrom, model.Email)
+                    {
+                        Subject = "Confirm your account",
+                        Body = "Please confirm your account by clicking < a href =\"" + callbackUrl + "\">here</a>",
+                        IsBodyHtml = true
+                    };
+                    //Step 2: I need an instance of PersonalEmail
+                    var svc = new PersonalEmail();
+                    //Step 3: Fire method from PersonalEmail class
+                    await svc.SendAsync(email);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -203,7 +219,7 @@ namespace Will_Blog.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                if (user == null )
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
@@ -211,15 +227,45 @@ namespace Will_Blog.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+                 await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+        //Resending Email Confirmation
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ResendEmailConfirmation()
+        {
+            return View();
+        }
+
+        //Resending Email Conformation
+        [HttpGet]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResendEmailConfirmation(ForgotPasswordViewModel model)
+        {
+            var user = await UserManager.FindByNameAsync(model.Email);
+            
+            if (user != null)
+            {
+                string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+            }
+            return RedirectToAction("ConfirmationSent");
+        }
+        public ActionResult ConfirmationSent()
+        {
+            return View();
+        }
+
+
 
         //
         // GET: /Account/ForgotPasswordConfirmation
@@ -276,7 +322,7 @@ namespace Will_Blog.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult ExternalLogin(string provider, string returnUrl)
+        public ActionResult ExternalLoginCallbackRedirect(string provider, string returnUrl)
         {
             // Request a redirect to the external login provider
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));

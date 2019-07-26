@@ -51,13 +51,30 @@
             }
         </section>
     </div>
-    <div class="col-md-4">
-        <section id="socialLoginForm">
-            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-        </section>
-    </div>
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+<html lang="en">
+<head>
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="370445167678-e14rnep8t4pf99u1768qkm41tla2m0mp.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+<body>
+    <div class="g-signin2 col-md-2" data-onsuccess="onSignIn" data-theme="dark"></div>
+</body>
+</html>
+<div class="col-md-2">
+<a href="#" onclick="signOut();">Sign out</a>
+    </div>
+<script>
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+        });
+    }
+</script>
+    

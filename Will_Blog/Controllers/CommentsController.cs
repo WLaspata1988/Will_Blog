@@ -10,6 +10,7 @@ using Will_Blog.Models;
 
 namespace Will_Blog.Controllers
 {
+    [RequireHttps]
     public class CommentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

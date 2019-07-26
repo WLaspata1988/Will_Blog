@@ -1,76 +1,39 @@
-﻿@model IEnumerable<Will_Blog.Models.BlogPost>
-
+﻿@using PagedList;
+@using PagedList.Mvc;
+@using Will_Blog.Models;
+@model IPagedList<BlogPost>
 @{
     ViewBag.Title = "Index";
 }
 
+
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Abstract)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Slug)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Body)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MediaUrl)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Published)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Created)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Updated)
-        </th>
-        <th></th>
-    </tr>
+@foreach (var item in Model)
+{
 
-@foreach (var item in Model) {//Model refers to IEnumerable, or the enumerator list order matters
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Abstract)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Slug)
-        </td>
-        <td>
-            @*@Html.DisplayFor(modelItem => item.Body)*@
-            @Html.Raw(item.Body)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MediaUrl)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Published)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Created)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Updated)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Details", "Details", new { slug = item.Slug }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-        </td>
-    </tr>
+    <div class="col-lg-4 col-md-6">
+        <div class="recipe">
+            <img src="~/img/recipes/1.jpg" alt="">
+            <div class="recipe-info-warp">
+                <div class="recipe-info">
+                    <a href="@Url.Action("Details", "BlogPosts", new { slug = item.Slug })"><h3>@item.Title</h3></a>
+                    <div class="rating">
+                        @item.Abstract
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
+@*<p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+                    <p>
+                    @Html.ActionLink("Edit", "Edit", new { id = Posts.Id }) |
+                    @Html.ActionLink("Details", "Details", new { slug = item.Slug }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    </p>
+        }*@
 
-</table>
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount@Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchStr = ViewBag.Search }));

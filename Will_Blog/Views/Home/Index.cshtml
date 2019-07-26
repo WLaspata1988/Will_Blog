@@ -1,4 +1,7 @@
-﻿<body>
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model Will_Blog.Models.LandingPageVM
+<body>
     <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
@@ -40,12 +43,12 @@
                     <div class="col-lg-4 col-md-5 offset-lg-8 offset-md-7">
                         <div class="add-text text-white">
                             <div class="at-style"></div>
-                            <h2>Amazing deserts</h2>
+                            <h2>Amazing Blogs</h2>
                             <ul>
-                                <li>Easy to make</li>
-                                <li>Step by Step Video Tutorial</li>
+                                <li>Easy to Read</li>
+                                <li>Low-brow Content</li>
                                 <li>Gluten Free</li>
-                                <li>Healty  Ingredients</li>
+                                <li>Healthy Reading</li>
                             </ul>
                         </div>
                     </div>
@@ -54,42 +57,22 @@
         </div>
     </section>
     <!-- Add section end -->
+
+    <div class="section-title col-md-8 text-center">
+        <h2>Latest Blogs</h2>
+    </div>
     <!-- Recipes section -->
     <section class="recipes-section spad pt-0">
         <div class="container">
-            <div class="section-title">
-                <h2>Latest Blogs</h2>
-            </div>
             <div class="row">
                 <div class="col-lg-4 col-md-6">
                     <div class="recipe">
-                        <img src="~/img/recipes/1.jpg" alt="">
+                        <img src="~/img/recipes/1.jpg">
                         <div class="recipe-info-warp">
                             <div class="recipe-info">
-                                <h3>Traditional Pizza</h3>
+                                <a href="@Url.Action("Details", "BlogPosts", new { slug = Model.TopLeft.Slug })"><h3>@Model.TopLeft.Title</h3></a>
                                 <div class="rating">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star is-fade"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-md-6">
-                    <div class="recipe">
-                        <img src="~/img/recipes/2.jpg" alt="">
-                        <div class="recipe-info-warp">
-                            <div class="recipe-info">
-                                <h3>Italian home-made pasta</h3>
-                                <div class="rating">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star is-fade"></i>
+                                    @Model.TopLeft.Abstract
                                 </div>
                             </div>
                         </div>
@@ -97,16 +80,12 @@
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="recipe">
-                        <img src="~/img/recipes/3.jpg" alt="">
+                        <img src="~/img/recipes/2.jpg">
                         <div class="recipe-info-warp">
                             <div class="recipe-info">
-                                <h3>Chesse Cake Tart</h3>
+                                <h3>@Model.TopMiddle.Title</h3>
                                 <div class="rating">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star is-fade"></i>
+                                    @Model.TopMiddle.Abstract
                                 </div>
                             </div>
                         </div>
@@ -114,16 +93,12 @@
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="recipe">
-                        <img src="~/img/recipes/4.jpg" alt="">
+                        <img src="~/img/recipes/3.jpg">
                         <div class="recipe-info-warp">
                             <div class="recipe-info">
-                                <h3>Traditional Pizza</h3>
+                                <h3>@Model.TopRight.Title</h3>
                                 <div class="rating">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star is-fade"></i>
+                                    @Model.TopRight.Abstract
                                 </div>
                             </div>
                         </div>
@@ -131,16 +106,12 @@
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="recipe">
-                        <img src="~/img/recipes/5.jpg" alt="">
+                        <img src="~/img/recipes/4.jpg">
                         <div class="recipe-info-warp">
                             <div class="recipe-info">
-                                <h3>Italian home-made pasta</h3>
+                                <h3>@Model.BottomLeft.Title</h3>
                                 <div class="rating">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star is-fade"></i>
+                                    @Model.BottomLeft.Title
                                 </div>
                             </div>
                         </div>
@@ -148,16 +119,25 @@
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="recipe">
-                        <img src="~/img/recipes/6.jpg" alt="">
+                        <img src="~/img/recipes/5.jpg">
                         <div class="recipe-info-warp">
                             <div class="recipe-info">
-                                <h3>Chesse Cake Tart</h3>
+                                <h3>@Model.BottomMiddle.Title</h3>
                                 <div class="rating">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star is-fade"></i>
+                                    @Model.BottomMiddle.Abstract
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="recipe">
+                        <img src="~/img/recipes/6.jpg">
+                        <div class="recipe-info-warp">
+                            <div class="recipe-info">
+                                <h3>@Model.BottomRight.Title</h3>
+                                <div class="rating">
+                                    @Model.BottomRight.Abstract
                                 </div>
                             </div>
                         </div>
@@ -173,7 +153,7 @@
             <div class="row">
                 <div class="col-lg-4 col-md-6 ftw-warp">
                     <div class="section-title">
-                        <h3>Top rated recipes</h3>
+                        <h3><a href="#"></a></h3>
                     </div>
                     <ul class="sp-recipes-list">
                         <li>

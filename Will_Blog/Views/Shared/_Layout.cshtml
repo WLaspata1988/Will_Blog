@@ -6,6 +6,8 @@
     <meta name="description" content="Food Blog Web Template">
     <meta name="keywords" content="food, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="370445167678-e14rnep8t4pf99u1768qkm41tla2m0mp.apps.googleusercontent.com">
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="shortcut icon" />
 
@@ -18,6 +20,7 @@
     <link rel="stylesheet" href="~/Content/owl.carousel.css" />
     <link rel="stylesheet" href="~/Content/animate.css" />
     <link rel="stylesheet" href="~/Content/style.css" />
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
 
 
     <!--[if lt IE 9]>
@@ -37,14 +40,11 @@
                     <a href="#"><i class="fa fa-facebook"></i></a>
                     <a href="#"><i class="fa fa-twitter"></i></a>
                     <a href="#"><i class="fa fa-dribbble"></i></a>
-                    <a href="#"><i class="fa fa-behance"></i></a>
+                    <a href="#"><i class="fa fa-google"></i></a>
                     <a href="#"><i class="fa fa-linkedin"></i></a>
                 </div>
                 <div class="user-panel">
-                    <a href="Account/Register">Register</a>
-                    /
-                    <a href="/Account/Login">Login</a>
-
+                    @Html.Partial("_LoginPartial")
                 </div>
             </div>
         </div>
@@ -56,15 +56,26 @@
                 <div class="nav-switch">
                     <i class="fa fa-bars"></i>
                 </div>
-                <div class="header-search">
-                    <a href="#"><i class="fa fa-search"></i></a>
-                </div>
+                @using (Html.BeginForm("Index", "BlogPosts", FormMethod.Get, htmlAttributes: new { @class = "form" }))
+                {
+                    <div class="header-search controls controls-row search-row">
+                        <input id="searchStr" name="searchStr" class="input-block-level" type="text" placeholder="Search">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                }
                 <ul class="main-menu">
                     <li><a href="/">Home</a></li>
                     <li><a href="about.html">Features</a></li>
                     <li><a href="/BlogPosts">Blogs</a></li>
                     <li><a href="#">Reviews</a></li>
                     <li><a href="/home/contact">Contact</a></li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("Create", "Create", "BlogPosts")</li>
+                        <li>@Html.ActionLink("All Posts", "AdminIndex", "BlogPosts") </li>
+                    }
                 </ul>
             </div>
         </div>
@@ -111,6 +122,8 @@
     <script src="~/Scripts/jquery-3.2.1.min.js"></script>
     <script src="~/Scripts/owl.carousel.min.js"></script>
     <script src="~/Scripts/main.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
 
     @RenderSection("scripts", required: false)
 </body>

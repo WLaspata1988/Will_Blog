@@ -55,12 +55,12 @@ namespace Will_Blog.Migrations
                 }, "abc&123!");
             }
 
-            if (!context.Users.Any(u => u.Email == "AWill@mailinator.com"))
+            if (!context.Users.Any(u => u.Email == "WillLaspata@gmail.com"))
             {
                 userManager.Create(new ApplicationUser
                 {
-                    UserName = "AWill@mailinator.com",
-                    Email = "AWill@mailinator.com",
+                    UserName = "Will",
+                    Email = "WillLaspata@gmail.com",
                     FirstName = "Will",
                     LastName = "Laspata",
                     DisplayName = "WillPasta"
@@ -69,7 +69,7 @@ namespace Will_Blog.Migrations
             }
             // how to assign user and moderator
 
-            var userId = userManager.FindByEmail("AWill@mailinator.com").Id;
+            var userId = userManager.FindByEmail("WillLaspata@gmail.com").Id;
             userManager.AddToRole(userId, "Admin");
 
             userId = userManager.FindByEmail("JTwichell@mailinator.com").Id;
